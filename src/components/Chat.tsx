@@ -577,10 +577,24 @@ export default function Chat() {
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-slate-400">
-              <div className="text-center">
-                <MessageSquare className="w-16 h-16 mx-auto mb-4" />
-                <p className="text-lg">Select a conversation to start messaging</p>
+            <div className="flex-1 flex flex-col">
+              <div className="p-6 border-b border-slate-200">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setChatSidebarOpen(!chatSidebarOpen)}
+                    className="md:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
+                  >
+                    {chatSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                  </button>
+                  <MessageSquare className="w-6 h-6 text-blue-600" />
+                  <h2 className="text-xl font-bold text-slate-900">Messages</h2>
+                </div>
+              </div>
+              <div className="flex-1 flex items-center justify-center text-slate-400">
+                <div className="text-center">
+                  <MessageSquare className="w-16 h-16 mx-auto mb-4" />
+                  <p className="text-lg">Select a conversation to start messaging</p>
+                </div>
               </div>
             </div>
           )}
