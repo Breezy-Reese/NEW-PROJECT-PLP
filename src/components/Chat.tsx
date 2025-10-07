@@ -536,7 +536,7 @@ export default function Chat() {
               </div>
 
               <div className="p-6 border-t border-slate-200">
-                <div className="flex gap-3">
+                <div className="flex flex-col md:flex-row gap-3">
                   <textarea
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
@@ -569,7 +569,7 @@ export default function Chat() {
                         viewMode === 'general'
                       )
                     }
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed md:px-6 md:py-3 px-4 py-2"
                   >
                     <Send className="w-5 h-5" />
                   </button>
