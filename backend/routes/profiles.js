@@ -18,48 +18,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get profile by ID
-router.get('/:id', async (req, res) => {
-  try {
-    if (!req.params.id || req.params.id === 'undefined' || !mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ error: 'Invalid profile ID' });
-    }
-    const profile = await User.findById(req.params.id).select('-password');
-    if (!profile) {
-      return res.status(404).json({ error: 'Profile not found' });
-    }
-    res.json({ profile });
-  } catch (error) {
-    console.error('Get profile error:', error);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// Update profile
-router.put('/:id', authenticateToken, async (req, res) => {
-  try {
-    // Check if user can update this profile
-    if (req.user.userId !== req.params.id) {
-      return res.status(403).json({ error: 'Not authorized' });
-    }
-
-    const updatedProfile = await User.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    ).select('-password');
-
-    if (!updatedProfile) {
-      return res.status(404).json({ error: 'Profile not found' });
-    }
-
-    res.json({ profile: updatedProfile });
-  } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
 // Get stats for dashboard
 router.get('/stats', async (req, res) => {
   try {
@@ -114,6 +72,48 @@ router.get('/stats', async (req, res) => {
     });
   } catch (error) {
     console.error('Get stats error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Get profile by ID
+router.get('/:id', async (req, res) => {
+  try {
+    if (!req.params.id || req.params.id === 'undefined' || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: 'Invalid profile ID' });
+    }
+    const profile = await User.findById(req.params.id).select('-password');
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+    res.json({ profile });
+  } catch (error) {
+    console.error('Get profile error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Update profile
+router.put('/:id', authenticateToken, async (req, res) => {
+  try {
+    // Check if user can update this profile
+    if (req.user.userId !== req.params.id) {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+
+    const updatedProfile = await User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!updatedProfile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
+    res.json({ profile: updatedProfile });
+  } catch (error) {
+    console.error('Update profile error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
