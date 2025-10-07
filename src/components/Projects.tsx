@@ -56,7 +56,9 @@ export default function Projects() {
 
   const loadProjects = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/projects`);
+      const res = await fetch(`${API_BASE}/api/projects`, {
+        credentials: 'include',
+      });
       if (!res.ok) throw new Error('Failed to load projects');
       const data = await res.json();
       setProjects(data.projects || []);
@@ -82,6 +84,7 @@ export default function Projects() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
         body: JSON.stringify(newProject),
       });
       if (!res.ok) throw new Error('Failed to create project');

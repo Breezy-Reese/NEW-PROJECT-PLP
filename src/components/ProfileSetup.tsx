@@ -39,6 +39,7 @@ export default function ProfileSetup() {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
+        credentials: 'include',
       });
 
       if (response.ok) {
@@ -78,6 +79,7 @@ export default function ProfileSetup() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
+        credentials: 'include',
         body: JSON.stringify(profile),
       });
 

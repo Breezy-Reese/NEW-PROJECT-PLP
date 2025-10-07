@@ -30,9 +30,17 @@ export default function Dashboard() {
 
   const loadStats = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/profiles/stats`);
-      if (!res.ok) throw new Error('Failed to load stats');
+      const res = await fetch(`${API_BASE}/api/profiles/stats`, {
+        credentials: 'include',
+      });
+      console.log('Stats response status:', res.status);
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to load stats:', res.status, errorText);
+        throw new Error(`Failed to load stats: ${res.status} ${errorText}`);
+      }
       const data = await res.json();
+      console.log('Stats data:', data);
       setStats(data.stats);
     } catch (error) {
       console.error('Error loading stats:', error);

@@ -102,6 +102,7 @@ export default function AdminDashboard() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to load stats');
       const data = await res.json();

@@ -41,6 +41,7 @@ export default function DeveloperSearch() {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
+        credentials: 'include',
       });
 
       if (response.ok) {

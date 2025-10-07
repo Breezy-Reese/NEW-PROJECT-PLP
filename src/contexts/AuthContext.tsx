@@ -31,6 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: {
           'Authorization': `Bearer ${token}`
         },
+        credentials: 'include',
       })
       .then(res => res.json())
       .then(data => {
@@ -58,6 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password, username, name }),
       });
 
@@ -83,6 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
