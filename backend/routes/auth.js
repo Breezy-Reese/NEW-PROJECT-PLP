@@ -5,8 +5,8 @@ const User = require('../models/User');
 const router = express.Router();
 
 // Generate JWT token
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET || 'your-secret-key', {
+const generateToken = (user) => {
+  return jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET || 'your-secret-key', {
     expiresIn: '7d'
   });
 };
@@ -69,14 +69,15 @@ router.post('/register', async (req, res) => {
     console.log('User saved successfully');
 
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken(user);
 
     res.status(201).json({
       user: {
         id: user._id,
         email: user.email,
         username: user.username,
-        name: user.name
+        name: user.name,
+        role: user.role
       },
       token
     });
@@ -108,14 +109,15 @@ router.post('/login', async (req, res) => {
     }
 
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken(user);
 
     res.json({
       user: {
         id: user._id,
         email: user.email,
         username: user.username,
-        name: user.name
+        name: user.name,
+        role: user.role
       },
       token
     });
@@ -139,4 +141,12 @@ router.get('/me', authenticateToken, async (req, res) => {
   }
 });
 
-module.exports = { router, authenticateToken };
+// Middleware to check if user is admin
+const requireAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+};
+
+module.exports = { router, authenticateToken, requireAdmin };

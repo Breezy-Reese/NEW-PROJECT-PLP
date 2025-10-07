@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthForm from './components/AuthForm';
 import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
+import AdminDashboard from './components/AdminDashboard';
 import DeveloperSearch from './components/DeveloperSearch';
 import Projects from './components/Projects';
 import Chat from './components/Chat';
@@ -26,7 +27,7 @@ function AppContent() {
 
   return (
     <Layout currentView={currentView} onViewChange={setCurrentView}>
-      {currentView === 'dashboard' && <Dashboard />}
+      {currentView === 'dashboard' && (user.role === 'admin' ? <AdminDashboard /> : <Dashboard />)}
       {currentView === 'search' && <DeveloperSearch />}
       {currentView === 'projects' && <Projects />}
       {currentView === 'chat' && <Chat />}

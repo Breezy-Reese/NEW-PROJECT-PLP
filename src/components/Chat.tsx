@@ -40,6 +40,18 @@ interface Project {
   description?: string;
 }
 
+interface OnlineUser {
+  userId: string;
+  userInfo: Profile;
+}
+
+interface PresenceEvent {
+  userId: string;
+  userInfo: Profile;
+  timestamp: string;
+  type?: 'joined' | 'left';
+}
+
 export default function Chat() {
   const { user } = useAuth();
   const [conversations, setConversations] = useState<Profile[]>([]);
@@ -50,7 +62,9 @@ export default function Chat() {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [socket, setSocket] = useState<any>(null);
-  const [viewMode, setViewMode] = useState<'direct' | 'project' | 'general'>('direct');
+  const [viewMode, setViewMode] = useState<'direct' | 'project' | 'general' | 'online'>('direct');
+  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
+  const [presenceNotifications, setPresenceNotifications] = useState<PresenceEvent[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
@@ -87,6 +101,7 @@ export default function Chat() {
       socketInstance.on('connect', () => {
         console.log('Socket connected:', socketInstance.id);
         socketInstance.emit('authenticate', token);
+        socketInstance.emit('get_online_users');
       });
       socketInstance.on('new_message', (message: MessageWithSender) => {
         if (viewMode === 'direct') {
@@ -105,6 +120,17 @@ export default function Chat() {
             setMessages((prevMessages) => [...prevMessages, message]);
           }
         }
+      });
+      socketInstance.on('online_users', (users: OnlineUser[]) => {
+        setOnlineUsers(users);
+      });
+      socketInstance.on('user_joined', (event: PresenceEvent) => {
+        setOnlineUsers((prev) => [...prev.filter(u => u.userId !== event.userId), { userId: event.userId, userInfo: event.userInfo }]);
+        setPresenceNotifications((prev) => [...prev.slice(-4), { ...event, type: 'joined' }]); // Keep last 5 notifications
+      });
+      socketInstance.on('user_left', (event: PresenceEvent) => {
+        setOnlineUsers((prev) => prev.filter(u => u.userId !== event.userId));
+        setPresenceNotifications((prev) => [...prev.slice(-4), { ...event, type: 'left' }]); // Keep last 5 notifications
       });
       setSocket(socketInstance);
     }
@@ -252,14 +278,14 @@ export default function Chat() {
               <MessageSquare className="w-6 h-6 text-blue-600" />
               <h2 className="text-xl font-bold text-slate-900">Messages</h2>
             </div>
-            <div className="mt-4 flex space-x-4">
+            <div className="mt-4 flex space-x-2 flex-wrap">
               <button
                 onClick={() => {
                   setViewMode('direct');
                   setSelectedProject(null);
                   setSelectedUser(null);
                 }}
-                className={`px-3 py-1 rounded ${
+                className={`px-3 py-1 rounded text-sm ${
                   viewMode === 'direct' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'
                 }`}
               >
@@ -271,7 +297,7 @@ export default function Chat() {
                   setSelectedUser(null);
                   setSelectedProject(null);
                 }}
-                className={`px-3 py-1 rounded ${
+                className={`px-3 py-1 rounded text-sm ${
                   viewMode === 'project' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'
                 }`}
               >
@@ -283,11 +309,23 @@ export default function Chat() {
                   setSelectedUser(null);
                   setSelectedProject(null);
                 }}
-                className={`px-3 py-1 rounded ${
+                className={`px-3 py-1 rounded text-sm ${
                   viewMode === 'general' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'
                 }`}
               >
                 General
+              </button>
+              <button
+                onClick={() => {
+                  setViewMode('online');
+                  setSelectedUser(null);
+                  setSelectedProject(null);
+                }}
+                className={`px-3 py-1 rounded text-sm ${
+                  viewMode === 'online' ? 'bg-green-600 text-white' : 'bg-slate-100 text-slate-700'
+                }`}
+              >
+                Online ({onlineUsers.length})
               </button>
             </div>
           </div>
@@ -380,6 +418,32 @@ export default function Chat() {
                   </div>
                 ))
               )
+            ) : viewMode === 'online' ? (
+              onlineUsers.length === 0 ? (
+                <div className="p-6 text-center text-slate-500">
+                  <div className="w-12 h-12 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-green-500 rounded-full"></div>
+                  </div>
+                  <p>No users online</p>
+                  <p className="text-sm mt-2">Users will appear here when they join</p>
+                </div>
+              ) : (
+                onlineUsers.map((onlineUser) => (
+                  <div
+                    key={onlineUser.userId}
+                    className="p-4 flex items-center gap-3 hover:bg-slate-50 transition"
+                  >
+                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold relative">
+                      {onlineUser.userInfo.name.charAt(0)}
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"></div>
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-slate-900">{onlineUser.userInfo.name}</p>
+                      <p className="text-sm text-slate-500">@{onlineUser.userInfo.username}</p>
+                    </div>
+                  </div>
+                ))
+              )
             ) : null}
           </div>
         </div>
@@ -416,6 +480,15 @@ export default function Chat() {
               </div>
 
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {presenceNotifications.map((notification, index) => (
+                  <div key={`notification-${index}`} className="flex justify-center">
+                    <div className={`px-3 py-1 rounded-full text-xs ${
+                      notification.type === 'joined' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {notification.userInfo.name} {notification.type === 'joined' ? 'joined' : 'left'} the chat
+                    </div>
+                  </div>
+                ))}
                 {messages.map((message) => (
                   <div
                     key={message._id}

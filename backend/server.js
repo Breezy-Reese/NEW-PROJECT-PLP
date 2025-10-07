@@ -34,40 +34,87 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://isavameshack_db_user:
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error('MongoDB connection error:', err));
 
+// Models (ensure they are loaded)
+const User = require('./models/User');
+const Project = require('./models/Project');
+const Message = require('./models/Message');
+
 // Routes
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profiles');
 const projectRoutes = require('./routes/projects');
 const messageRoutes = require('./routes/messages');
+const adminRoutes = require('./routes/admin');
 
 app.use('/api/auth', authRoutes.router);
 app.use('/api/profiles', profileRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'DevCollab Backend API' });
 });
+
+// Online users tracking
+const onlineUsers = new Map(); // userId -> { socketId, userInfo }
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
   // Authenticate socket connection
-  socket.on('authenticate', (token) => {
+  socket.on('authenticate', async (token) => {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       socket.userId = decoded.userId;
       socket.join(`user_${decoded.userId}`);
       console.log('User authenticated:', decoded.userId);
+
+      // Add user to online list
+      const userInfo = await User.findById(decoded.userId).select('name username');
+      if (userInfo) {
+        onlineUsers.set(decoded.userId, { socketId: socket.id, userInfo });
+
+        // Emit user joined event to all clients
+        io.emit('user_joined', {
+          userId: decoded.userId,
+          userInfo,
+          timestamp: new Date()
+        });
+      }
     } catch (error) {
       console.error('Socket authentication failed:', error);
       socket.disconnect();
     }
   });
 
+  // Handle request for online users list
+  socket.on('get_online_users', () => {
+    const onlineUsersList = Array.from(onlineUsers.entries()).map(([userId, data]) => ({
+      userId,
+      userInfo: data.userInfo
+    }));
+    socket.emit('online_users', onlineUsersList);
+  });
+
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
+
+    // Remove user from online list if they were authenticated
+    if (socket.userId) {
+      const userData = onlineUsers.get(socket.userId);
+      if (userData) {
+        onlineUsers.delete(socket.userId);
+
+        // Emit user left event to all clients
+        io.emit('user_left', {
+          userId: socket.userId,
+          userInfo: userData.userInfo,
+          timestamp: new Date()
+        });
+      }
+    }
   });
 });
 
