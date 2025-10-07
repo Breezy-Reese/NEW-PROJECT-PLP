@@ -37,7 +37,7 @@ export default function DeveloperSearch() {
   const loadDevelopers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/profiles', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/profiles`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

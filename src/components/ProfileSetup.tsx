@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Globe, MapPin, Code, Briefcase, Github, Link as LinkIcon, Save } from 'lucide-react';
 
-const COUNTRIES = ['United States', 'Canada', 'United Kingdom', 'Germany', 'France', 'India', 'Australia', 'Japan', 'Brazil', 'Mexico', 'Nigeria', 'South Africa', 'Other'];
+const COUNTRIES = ['United States', 'Canada', 'United Kingdom', 'Germany', 'France', 'India', 'Australia', 'Japan', 'Brazil', 'Mexico', 'Nigeria', 'South Africa','Tanzania', 'Kenya', 'Uganda', 'Rwanda', 'Burundi', 'South Sudan', 'Ethiopia', 'Eritrea', 'Somalia', 'Djibouti', 'Sudan', 'Comoros', 'Seychelles', 'Mauritius', 'Madagascar'
+, 'Other'];
 const LANGUAGES = ['JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin', 'Dart'];
 const SKILLS = ['Frontend', 'Backend', 'Full Stack', 'Mobile', 'DevOps', 'UI/UX Design', 'Data Science', 'Machine Learning', 'Blockchain', 'Game Development', 'Cloud Architecture'];
 
@@ -34,7 +35,7 @@ export default function ProfileSetup() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/profiles/${user.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/profiles/${user.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -72,7 +73,7 @@ export default function ProfileSetup() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/profiles/${user.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/profiles/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
