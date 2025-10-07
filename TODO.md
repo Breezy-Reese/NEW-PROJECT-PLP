@@ -9,3 +9,4 @@
 ## Progress
 - Added toggle button in Chat for sidebar when no conversation selected
 - Made Chat message input responsive (stacked on mobile)
+- Auto-close Chat sidebar on mobile when selecting a conversation

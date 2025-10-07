@@ -343,7 +343,10 @@ export default function Chat() {
                 conversations.map((conv) => (
                   <button
                     key={conv._id}
-                    onClick={() => setSelectedUser(conv)}
+                    onClick={() => {
+                      setSelectedUser(conv);
+                      setChatSidebarOpen(false);
+                    }}
                     className={`w-full p-4 flex items-center gap-3 hover:bg-slate-50 transition ${
                       selectedUser?._id === conv._id ? 'bg-blue-50' : ''
                     }`}
@@ -369,7 +372,10 @@ export default function Chat() {
                 projects.map((project) => (
                   <button
                     key={project._id}
-                    onClick={() => setSelectedProject(project)}
+                    onClick={() => {
+                      setSelectedProject(project);
+                      setChatSidebarOpen(false);
+                    }}
                     className={`w-full p-4 flex items-center gap-3 hover:bg-slate-50 transition ${
                       selectedProject?._id === project._id ? 'bg-blue-50' : ''
                     }`}
