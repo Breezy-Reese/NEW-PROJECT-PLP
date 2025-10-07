@@ -435,9 +435,14 @@ export default function Chat() {
                 </div>
               ) : (
                 onlineUsers.map((onlineUser) => (
-                  <div
+                  <button
                     key={onlineUser.userId}
-                    className="p-4 flex items-center gap-3 hover:bg-slate-50 transition"
+                    onClick={() => {
+                      setSelectedUser(onlineUser.userInfo);
+                      setViewMode('direct');
+                      setChatSidebarOpen(false);
+                    }}
+                    className="w-full p-4 flex items-center gap-3 hover:bg-slate-50 transition text-left"
                   >
                     <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold relative">
                       {onlineUser.userInfo.name.charAt(0)}
@@ -447,7 +452,7 @@ export default function Chat() {
                       <p className="font-medium text-slate-900">{onlineUser.userInfo.name}</p>
                       <p className="text-sm text-slate-500">@{onlineUser.userInfo.username}</p>
                     </div>
-                  </div>
+                  </button>
                 ))
               )
             ) : null}
