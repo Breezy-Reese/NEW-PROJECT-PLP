@@ -72,7 +72,7 @@ io.on('connection', async (socket) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const decoded = jwt.verify(token, 'your-secret-key');
     socket.userId = decoded.userId;
     socket.join(`user_${decoded.userId}`);
     console.log('User authenticated:', decoded.userId);
