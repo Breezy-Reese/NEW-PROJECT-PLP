@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, Home, Users, FolderKanban, MessageSquare, TrendingUp, CircleUser as UserCircle } from 'lucide-react';
+import { LogOut, Home, Users, FolderKanban, MessageSquare, TrendingUp, CircleUser as UserCircle, Menu, X } from 'lucide-react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +10,7 @@ interface LayoutProps {
 
 export default function Layout({ children, currentView, onViewChange }: LayoutProps) {
   const { signOut } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
@@ -28,11 +29,19 @@ export default function Layout({ children, currentView, onViewChange }: LayoutPr
               <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
                 <Home className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <h1 className="text-xl font-bold text-slate-900">DevCollab</h1>
-                <p className="text-xs text-slate-500">Global Developer Network</p>
-              </div>
+            <div>
+              <h1 className="text-xl font-bold text-slate-900">DevCollab</h1>
+              <p className="text-xs text-slate-500">Global Developer Network</p>
             </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden flex items-center gap-2 px-3 py-2 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
 
             <button
               onClick={() => signOut()}
@@ -42,12 +51,20 @@ export default function Layout({ children, currentView, onViewChange }: LayoutPr
               <span className="font-medium">Sign Out</span>
             </button>
           </div>
+          </div>
         </div>
       </nav>
 
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex gap-6">
-          <aside className="w-64 flex-shrink-0">
+          <aside className={`w-64 flex-shrink-0 ${isMobileMenuOpen ? 'block' : 'hidden'} md:block fixed md:relative top-16 md:top-0 left-0 h-full md:h-auto z-30`}>
             <div className="bg-white rounded-2xl shadow-lg p-4 sticky top-24">
               <nav className="space-y-2">
                 {navItems.map((item) => {

@@ -1,17 +1,10 @@
-# Configure Frontend for Production API
+# TODO: Make System Responsive for Mobile Phones
 
 ## Tasks
-- [x] Create .env file with VITE_API_BASE_URL=https://devcollab-carsonn.onrender.com
-- [x] Update src/contexts/AuthContext.tsx to use environment variable with deployed URL as default
-- [x] Update src/components/DeveloperSearch.tsx to use environment variable with deployed URL as default
-- [x] Update src/components/ProfileSetup.tsx to use environment variable with deployed URL as default
-- [x] Update src/components/Chat.tsx to use VITE_API_BASE_URL with deployed URL as default
-- [x] Update src/components/Projects.tsx to use VITE_API_BASE_URL with deployed URL as default
-- [x] Update src/components/Dashboard.tsx to use VITE_API_BASE_URL with deployed URL as default
-- [x] Update src/components/AdminDashboard.tsx to use VITE_API_BASE_URL with deployed URL as default
-- [x] Remove credentials: 'include' from all fetch calls in frontend components
-- [x] Update backend/server.js CORS to allow https://devcollab-carsonn.vercel.app
-- [x] Update Socket.IO CORS in backend/server.js
-- [x] Added credentials: 'include' back to all fetch calls to fix cross-origin requests to deployed backend
-- [ ] Test development still works with localhost fallback (set VITE_API_BASE_URL=http://localhost:5000 in local .env)
-- [ ] Test production deployment on Vercel
+- [x] Modify Layout.tsx to add mobile menu toggle for sidebar
+- [x] Modify Chat.tsx to make internal sidebar responsive
+- [ ] Test responsiveness on small screens
+- [ ] Adjust any overflowing or cramped content if needed
+
+## Progress
+- Completed Chat.tsx internal sidebar responsiveness

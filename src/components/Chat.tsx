@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Send, MessageSquare } from 'lucide-react';
+import { Send, MessageSquare, Menu, X } from 'lucide-react';
 import io from 'socket.io-client';
 
 interface Message {
@@ -65,6 +65,7 @@ export default function Chat() {
   const [viewMode, setViewMode] = useState<'direct' | 'project' | 'general' | 'online'>('direct');
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [presenceNotifications, setPresenceNotifications] = useState<PresenceEvent[]>([]);
+  const [chatSidebarOpen, setChatSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com';
@@ -271,8 +272,8 @@ export default function Chat() {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden" style={{ height: 'calc(100vh - 12rem)' }}>
-      <div className="flex h-full">
-        <div className="w-80 border-r border-slate-200 flex flex-col">
+      <div className="flex h-full relative">
+        <div className={`w-80 border-r border-slate-200 flex flex-col absolute md:relative inset-y-0 left-0 z-10 bg-white md:bg-transparent ${chatSidebarOpen ? 'block' : 'hidden'} md:block`}>
           <div className="p-6 border-b border-slate-200">
             <div className="flex items-center gap-3">
               <MessageSquare className="w-6 h-6 text-blue-600" />
@@ -453,6 +454,12 @@ export default function Chat() {
             <>
               <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setChatSidebarOpen(!chatSidebarOpen)}
+                    className="md:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
+                  >
+                    {chatSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                  </button>
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
                       viewMode === 'direct' ? 'bg-blue-500' : viewMode === 'project' ? 'bg-green-500' : 'bg-purple-500'
