@@ -60,34 +60,40 @@ app.get('/', (req, res) => {
 const onlineUsers = new Map(); // userId -> { socketId, userInfo }
 
 // Socket.IO connection handling
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log('User connected:', socket.id);
 
-  // Authenticate socket connection
-  socket.on('authenticate', async (token) => {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      socket.userId = decoded.userId;
-      socket.join(`user_${decoded.userId}`);
-      console.log('User authenticated:', decoded.userId);
+  // Authenticate socket connection using handshake auth
+  const token = socket.handshake.auth?.token;
+  if (!token) {
+    console.log('No token provided, disconnecting');
+    socket.disconnect();
+    return;
+  }
 
-      // Add user to online list
-      const userInfo = await User.findById(decoded.userId).select('name username');
-      if (userInfo) {
-        onlineUsers.set(decoded.userId, { socketId: socket.id, userInfo });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    socket.userId = decoded.userId;
+    socket.join(`user_${decoded.userId}`);
+    console.log('User authenticated:', decoded.userId);
 
-        // Emit user joined event to all clients
-        io.emit('user_joined', {
-          userId: decoded.userId,
-          userInfo,
-          timestamp: new Date()
-        });
-      }
-    } catch (error) {
-      console.error('Socket authentication failed:', error);
-      socket.disconnect();
+    // Add user to online list
+    const userInfo = await User.findById(decoded.userId).select('name username');
+    if (userInfo) {
+      onlineUsers.set(decoded.userId, { socketId: socket.id, userInfo });
+
+      // Emit user joined event to all clients
+      io.emit('user_joined', {
+        userId: decoded.userId,
+        userInfo,
+        timestamp: new Date()
+      });
     }
-  });
+  } catch (error) {
+    console.error('Socket authentication failed:', error);
+    socket.disconnect();
+    return;
+  }
 
   // Handle request for online users list
   socket.on('get_online_users', () => {

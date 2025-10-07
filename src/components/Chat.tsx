@@ -101,7 +101,6 @@ export default function Chat() {
       });
       socketInstance.on('connect', () => {
         console.log('Socket connected:', socketInstance.id);
-        socketInstance.emit('authenticate', token);
         socketInstance.emit('get_online_users');
       });
       socketInstance.on('new_message', (message: MessageWithSender) => {
