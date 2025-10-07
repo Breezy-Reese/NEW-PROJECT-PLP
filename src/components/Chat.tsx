@@ -67,7 +67,7 @@ export default function Chat() {
   const [presenceNotifications, setPresenceNotifications] = useState<PresenceEvent[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com';
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem('token');

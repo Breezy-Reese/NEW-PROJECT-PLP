@@ -35,11 +35,10 @@ export default function ProfileSetup() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/profiles/${user.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com'}/api/profiles/${user.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
-        credentials: 'include',
       });
 
       if (response.ok) {
@@ -73,13 +72,12 @@ export default function ProfileSetup() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/profiles/${user.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com'}/api/profiles/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        credentials: 'include',
         body: JSON.stringify(profile),
       });
 

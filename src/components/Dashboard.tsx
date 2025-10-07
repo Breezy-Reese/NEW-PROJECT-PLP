@@ -22,7 +22,7 @@ export default function Dashboard() {
   });
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = import.meta.env.VITE_API_BASE || '';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com';
 
   useEffect(() => {
     loadStats();
@@ -30,9 +30,7 @@ export default function Dashboard() {
 
   const loadStats = async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/profiles/stats`, {
-        credentials: 'include',
-      });
+      const res = await fetch(`${API_BASE}/api/profiles/stats`);
       if (!res.ok) throw new Error('Failed to load stats');
       const data = await res.json();
       setStats(data.stats);
