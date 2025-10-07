@@ -68,7 +68,7 @@ export default function Chat() {
   const [chatSidebarOpen, setChatSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com';
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem('token');

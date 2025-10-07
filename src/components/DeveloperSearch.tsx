@@ -37,7 +37,7 @@ export default function DeveloperSearch() {
   const loadDevelopers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com'}/api/profiles`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com'}/api/profiles`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

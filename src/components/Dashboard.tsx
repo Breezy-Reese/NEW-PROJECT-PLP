@@ -22,7 +22,7 @@ export default function Dashboard() {
   });
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com';
 
   useEffect(() => {
     loadStats();

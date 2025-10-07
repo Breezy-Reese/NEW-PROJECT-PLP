@@ -77,7 +77,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'projects' | 'messages'>('overview');
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com';
 
   // Combine chart data for line chart
   const combinedChartData = usersChart.map((item, index) => ({

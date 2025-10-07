@@ -35,7 +35,7 @@ export default function ProfileSetup() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com'}/api/profiles/${user.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com'}/api/profiles/${user.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -73,7 +73,7 @@ export default function ProfileSetup() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com'}/api/profiles/${user.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com'}/api/profiles/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
