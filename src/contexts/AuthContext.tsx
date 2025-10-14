@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem('token');
     if (token) {
       // Verify token and get user
-      fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com'}/api/auth/me`, {
+      fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com'}/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         },
@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, username: string, name: string) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com'}/api/auth/register`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com'}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://devcollab-carsonn.onrender.com'}/api/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'https://new-project-plp.onrender.com'}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
