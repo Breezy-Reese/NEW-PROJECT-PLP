@@ -13,7 +13,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:5173', 'http://localhost:5176', 'http://localhost:5000', 'https://new-project-plp.vercel.app/', 'https://new-project-plp.onrender.com', 'https://new-project-lzelhxief-breezy-reeses-projects.vercel.app'],
+    origin: ['http://localhost:5173', 'http://localhost:5176', 'http://localhost:5000', 'https://new-project-lzelhxief-breezy-reeses-projects.vercel.app/', 'https://new-project-plp.onrender.com', 'https://new-project-lzelhxief-breezy-reeses-projects.vercel.app'],
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -21,7 +21,7 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5176', 'http://localhost:5000', 'https://new-project-plp.vercel.app/', 'https://new-project-plp.onrender.com', 'https://new-project-lzelhxief-breezy-reeses-projects.vercel.app'],
+  origin: ['http://localhost:5173', 'http://localhost:5176', 'http://localhost:5000', 'https://new-project-lzelhxief-breezy-reeses-projects.vercel.app/', 'https://new-project-plp.onrender.com', 'https://new-project-lzelhxief-breezy-reeses-projects.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
